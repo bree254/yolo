@@ -7,6 +7,9 @@ For the runtime stage I used `nginx:1.25-alpine` cause after doing my research i
 - **Backend**
 Runs on `node:16-alpine` ,which gives a supported LTS version of Node.js ,it provides the node 16 toolchain to run npm ci on top of Alpine Linux for minimal image size .
 The runtime stage switches to `alpine:3.16.7` so the final container is smaller
+- **Database**
+Relies on mongo:3.0 
+I tried pulling a few mongo images (4.2.24 was ~388 MB)(6.0 was ~765 MB), the images were verylarge so i decided to downgrade and this version had the least image size 232 mbs which fit into the rubric requirements .It's an older release but it's stil compatible with the Mongoose 5.x client in the setup.
 
 
 ## 2. Dockerfile Directives
@@ -36,4 +39,16 @@ I went with a two-stage build
   -  `EXPOSE 5000` the port the server runs
   - `CMD ["node","server.js"]` whenever the container starts it boots the express server in production mode
 
+
+## 3. Docker-compose networking
+- **Networking Implemantation**
+From the rubric ,we are required to implement custom bridge networks that connect the containers .So I decided to create yolo-net instead of the default bridge so the three services can live on their own subnet and avoid clashing with other projects.I chose a 172.30 range so it wouldnt overlap with anything else I run locally
+- **Port allocation**
+From my frontend container the port is pointed to port 80 but for compose I published it on port 3000 so I can acceess it on the browser.
+The backend exposes 5000 for API calls and I kept Mongo's 27017 open in case I need to connect with a local shell
+
+
+## 4. Docker-compose volume definition and usage
+For this , I defined mongo-data a named Docker colume and mounted it at /data/db inside the Mongo container.Docker keeps the volume outside the container filesystem ,so even if I run `docker compose down` or rebuild the yolo-mongo container ,the BSON files remain untouched.
+From the rubric requirements : the database survives the container restarts without any manual export/import .I tested this by removing the container ,bringing it back up and confirming that all previously added products were still there.
 
