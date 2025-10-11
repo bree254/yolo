@@ -9,7 +9,7 @@ Runs on `node:16-alpine` ,which gives a supported LTS version of Node.js ,it pro
 The runtime stage switches to `alpine:3.16.7` so the final container is smaller
 - **Database**
 Relies on mongo:3.0 
-I tried pulling a few mongo images (4.2.24 was ~388 MB)(6.0 was ~765 MB), the images were verylarge so i decided to downgrade and this version had the least image size 232 mbs which fit into the rubric requirements .It's an older release but it's stil compatible with the Mongoose 5.x client in the setup.
+I tried pulling a few mongo images (4.2.24 was 388 MB)(6.0 was 765 MB), the images were verylarge so i decided to downgrade and this version had the least image size 232MB which fit into the rubric requirements .It's an older release but it's stil compatible with the Mongoose 5.x client in the setup.
 
 
 ## 2. Dockerfile Directives
@@ -51,4 +51,30 @@ The backend exposes 5000 for API calls and I kept Mongo's 27017 open in case I n
 ## 4. Docker-compose volume definition and usage
 For this , I defined mongo-data a named Docker colume and mounted it at /data/db inside the Mongo container.Docker keeps the volume outside the container filesystem ,so even if I run `docker compose down` or rebuild the yolo-mongo container ,the BSON files remain untouched.
 From the rubric requirements : the database survives the container restarts without any manual export/import .I tested this by removing the container ,bringing it back up and confirming that all previously added products were still there.
+
+
+## 5. Git Workflow
+For this project I decided to forego using feature branches, and  stayed on master since I’m the only contributor, but kept changes small and commit messages descriptive. Each major update followed the same loop ,edit locally, run `docker compose up -d --pull always` to make sure the stack and persistence still worked, then `git add`, commit, and push. I rebuilt the client Dockerfile first, then the backend Dockerfile, documenting both choices in `explanation.md`. After the compose rewrite I pushed new tags (`bree254/...:v1.0.0`) to Docker Hub, updated the compose file, and validated the pull before committing. The commit history follows that order ,I tackled the Dockerfiles first ,documented the reasoning , updated compose and its explanation, then wrapped things up with the remaining explanation.md sections and the README notes.
+
+## 6. Running/Debugging 
+- I ran `docker compose up -d --pull always` to make sure the published images work on a clean machine ,then to check if everything works fine I ran `docker compose logs -f yolo-backend` and saw a "Server listening on port 5000" and "Database connected successfully"
+- I checked for data persistence by adding products on http://localhost:3000 ,starting the stack back up and seeing the products added still on the website ,which confirmed that the container survived restarts thanks to the mongo-data volume
+- I was able to achieve the the 400MB limit ,50.4MB frontend ,78.9MB backend and 232MB for mongo db totaling to 362MB.
+- When I tested `mongo:4.2.24`, the image was 388 MB, so I swapped to `mongo:3.0` to satisfy the rubric. I also solved a “node: not found” error by installing Node in the final Alpine stage (`RUN apk add --no-cache nodejs`).
+
+## 7. Best Practices 
+- Used semantic tags (v1.0.0)
+- Aligning container names and image names in the docker-compose.yaml
+- Docker Hub screenshots to show published images 
+- The depend_on health check in the `docker-compose.yaml` ensures Mongo is ready before the backend service can start
+
+## 8. Screenshots
+### Docker Hub repository
+![Docker hub repository](screenshots/dockerhub-repo.png)
+### Docker Hub tags
+![Docker Hub – backend tags](screenshots/dockerhub-frontend.png)
+![Docker Hub – frontend tags](screenshots/dockerhub-backend.png)
+### UI
+![Yolo website](screenshots/yolo-website.png)
+![Yolo website with products](screenshots/yolo-image-with-products.png)
 
