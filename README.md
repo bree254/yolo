@@ -2,9 +2,9 @@
 
 ## Overview
 This project involves a containerized e-commerce dashboard YOLO.The docker compose orchestrates three services :
--`yolo-frontend` - spa compiled to static assets and served by nginx
--`yolo-backend` - an express API for CRUD operations on products
--`yolo-mongo` - MongoDB with persisted volume for product data
+- `yolo-frontend` - spa compiled to static assets and served by nginx
+- `yolo-backend` - an express API for CRUD operations on products
+- `yolo-mongo` - MongoDB with persisted volume for product data
 
 ## Requirements
 - Docker Engine 24+ with the compose plugin
@@ -19,9 +19,11 @@ docker compose up --build
 3. To verify the stack we run
 ```bash 
 docker compose ps
-docker compose logs -f yolo-backend
 ```
  ![Docker compose ps image](screenshots/docker-compose-ps.png)
+ ```bash 
+docker compose logs -f yolo-backend
+```
  ![Docker compose logs image](screenshots/docker-compose-logs.png)
 
 4. To see the images and check their sizes we run 
@@ -67,7 +69,8 @@ docker compose push
 ```
 ### Docker Hub repository
 ![Docker hub repository](screenshots/dockerhub-repo.png)
-### Docker Hub tags
+### Docker Hub Frontend tag
 ![Docker Hub – backend tags](screenshots/dockerhub-frontend.png)
+### Docker Hub Frontend tag
 ![Docker Hub – frontend tags](screenshots/dockerhub-backend.png)
 
