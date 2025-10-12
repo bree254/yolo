@@ -71,6 +71,6 @@ docker compose push
 ![Docker hub repository](screenshots/dockerhub-repo.png)
 ### Docker Hub Frontend tag
 ![Docker Hub – backend tags](screenshots/dockerhub-frontend.png)
-### Docker Hub Frontend tag
+### Docker Hub Backend tag
 ![Docker Hub – frontend tags](screenshots/dockerhub-backend.png)
 
