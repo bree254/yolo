@@ -71,8 +71,9 @@ For this project I decided to forego using feature branches, and  stayed on mast
 ## 8. Screenshots
 ### Docker Hub repository
 ![Docker hub repository](screenshots/dockerhub-repo.png)
-### Docker Hub tags
+### Docker Hub Frontend tag
 ![Docker Hub – backend tags](screenshots/dockerhub-frontend.png)
+### Docker Hub Backend tag
 ![Docker Hub – frontend tags](screenshots/dockerhub-backend.png)
 ### UI
 ![Yolo website](screenshots/yolo-website.png)
