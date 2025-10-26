@@ -1,3 +1,21 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # tasks file for roles/database
+- name: Run MongoDB container
+  community.docker.docker_container:
+    name: yolo-mongo
+    image: "{{ database_image }}"
+    restart_policy: unless-stopped
+    published_ports:
+      - "{{ database_port }}:27017"
+    env: "{{ database_env }}"
+    volumes:
+      - "{{ database_volume }}:/data/db"
+    networks:
+      - name: yolo-net
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
