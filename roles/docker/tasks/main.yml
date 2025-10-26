@@ -45,16 +45,16 @@
 
 - name: Add vagrant user to docker group
   user:
-    name: vagrant
+    name: "{{ app_user }}"
     groups: docker
     append: yes
 
 - name: Ensure yolo-net network exists
   community.docker.docker_network:
-    name: "{{ network_name }}"
+    name: "{{ docker_network_name }}"
     state: present
 
 - name: Ensure mongo-data volume exists
   community.docker.docker_volume:
-    name: "{{ volume_name }}"
+    name: "{{ mongo_volume_name }}"
     state: present

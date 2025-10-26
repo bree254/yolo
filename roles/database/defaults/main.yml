@@ -2,7 +2,8 @@
 ---
 # defaults file for roles/database
 database_image: mongo:3.0
+database_container_name: yolo-mongo
 database_port: 27017
 database_env:
   MONGO_INITDB_DATABASE: yolomy
-database_volume: mongo-data
+database_volume: "{{ mongo_volume_name | default('mongo-data') }}"

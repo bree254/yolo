@@ -11,7 +11,7 @@
 
 - name: Run backend container
   community.docker.docker_container:
-    name: yolo-backend
+    name: "{{ backend_container_name }}"
     image: "{{ backend_image }}"
     restart_policy: unless-stopped
     command: ["node", "server.js"]
@@ -19,4 +19,4 @@
       - "{{ backend_port }}:5000"
     env: "{{ backend_env }}"
     networks:
-      - name: yolo-net
+      - name: "{{ docker_network_name }}"

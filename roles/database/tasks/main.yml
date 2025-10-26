@@ -3,7 +3,7 @@
 # tasks file for roles/database
 - name: Run MongoDB container
   community.docker.docker_container:
-    name: yolo-mongo
+    name: "{{ database_container_name }}"
     image: "{{ database_image }}"
     restart_policy: unless-stopped
     published_ports:
@@ -12,7 +12,7 @@
     volumes:
       - "{{ database_volume }}:/data/db"
     networks:
-      - name: yolo-net
+      - name: "{{ docker_network_name }}"
     healthcheck:
       test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand({ ping: 1 })"]
       interval: 10s

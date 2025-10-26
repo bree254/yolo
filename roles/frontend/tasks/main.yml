@@ -12,9 +12,9 @@
 
 - name: Run frontend container
   community.docker.docker_container:
-    name: yolo-frontend
+    name: "{{ frontend_container_name }}"
     image: "{{ frontend_image }}"
     published_ports:
       - "{{ frontend_host_port }}:80"
     networks:
-      - name: yolo-net
+      - name: "{{ docker_network_name }}"
