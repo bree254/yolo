@@ -1,0 +1,11 @@
+---
+- name: Provision containerized YOLO e-commerce app
+  hosts: default
+  become: true
+  roles:
+    - project_setup
+    - docker
+    - app_code
+    - frontend
+    - backend
+    - database
