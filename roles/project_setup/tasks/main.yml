@@ -1,3 +1,16 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # tasks file for project_setup
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  tags: project_setup
+
+- name: Install base packages
+  apt:
+    name:
+      - git
+      - curl
+      - python3-pip
+    state: present
+  tags: project_setup
