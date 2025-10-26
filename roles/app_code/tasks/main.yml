@@ -1,3 +1,17 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # tasks file for app_code
+- name: Ensure the app directory exists
+  file:
+    path: "{{ app_root }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'
+
+- name: Clone YOLO application repo
+  git:
+      repo: "{{ app_repo_url }}"
+      dest: "{{ app_root }}"
+      version: "{{ app_repo_branch }}"
+      force: yes
