@@ -3,9 +3,9 @@
   hosts: default
   become: true
   roles:
-    - project_setup
-    - docker
-    - app_code
-    - frontend
-    - backend
-    - database
+    - { role: project_setup, tags: ['project_setup'] }
+    - { role: docker, tags: ['docker'] }
+    - { role: app_code, tags: ['app_code'] }
+    - { role: frontend, tags: ['frontend'] }
+    - { role: backend, tags: ['backend'] }
+    - { role: database, tags: ['database'] }

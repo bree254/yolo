@@ -1,20 +1,23 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # tasks file for roles/frontend
-- name: Build frontend image
-  community.docker.docker_image:
-    name: "{{ frontend_image }}"
-    build:
-      path: "{{ app_root }}/client"
-      args:
-        API_BASE_URL: "{{ frontend_api_base_url }}"
-    source: build
+- block:
+    - name: Build frontend image
+      community.docker.docker_image:
+        name: "{{ frontend_image }}"
+        build:
+          path: "{{ app_root }}/client"
+          args:
+            API_BASE_URL: "{{ frontend_api_base_url }}"
+        source: build
 
-- name: Run frontend container
-  community.docker.docker_container:
-    name: "{{ frontend_container_name }}"
-    image: "{{ frontend_image }}"
-    published_ports:
-      - "{{ frontend_host_port }}:80"
-    networks:
-      - name: "{{ docker_network_name }}"
+    - name: Run frontend container
+      community.docker.docker_container:
+        name: "{{ frontend_container_name }}"
+        image: "{{ frontend_image }}"
+        published_ports:
+          - "{{ frontend_host_port }}:80"
+        networks:
+          - name: "{{ docker_network_name }}"
+  tags:
+    - frontend
