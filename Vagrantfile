@@ -77,6 +77,6 @@ Vagrant.configure("2") do |config|
   config.vm.provision "ansible_local" do |ansible|
     ansible.playbook = "/vagrant/playbook.yml"
     ansible.inventory_path = "/vagrant/inventory.yml"
-    ansible.galaxy_role_file = "/vagrant/requirements.yml"
+    # ansible.galaxy_role_file = "/vagrant/requirements.yml"
   end
 end
