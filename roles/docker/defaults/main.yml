@@ -1,3 +1,5 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # defaults file for docker
+network_name: yolo-net
+volume_name: yolo-mongo-data
