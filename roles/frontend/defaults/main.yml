@@ -1,3 +1,6 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # defaults file for roles/frontend
+frontend_image: bree254/yolo-frontend:v1.0.0
+frontend_api_base_url: http://localhost:5000
+frontend_host_port: 3000
