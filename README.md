@@ -23,9 +23,11 @@ $ vagrant ssh -c "sudo docker ps"
 $ curl http://localhost:5000/api/products
 ```
 Docker ps
+
 ![Docker ps](screenshots/vagrant-docker-compose.png)
 
 Products
+
 ![Products](screenshots/curl-add-products.png)
 
 ## Ports and Access
@@ -68,17 +70,29 @@ Database Tag
 ## Repo Structure
 
 - `Vagrantfile` – VM and Ansible provisioner configuration
-- `playbook.yml` – Orchestrates the roles (see explanation.md for ordering decisions and Ansible module choices)
+- `playbook.yml` – Orchestrates the roles (see [explanation.md](explanation.md) for ordering decisions and Ansible module choices)
 - `group_vars/all.yml` – Shared variables (paths, container names, ports)
 - `roles/` – Individual roles for setup, Docker, code checkout, and services
 - `screenshots/` – Reference images used in this README
 
 ## Troubleshooting
+- If provisioning fails or you change code, rerun:
+
 ```bash
 vagrant provision
 ```
 
 ![Vagrant provision](screenshots/vagrant-provision.png)
+
+- Re-run a single component via tags (inside the VM):
+```bash
+ansible-playbook -i inventory.yml playbook.yml --tags backend
+```
+    
+- Check container logs:
+```bash
+ vagrant ssh -c "docker logs yolo-backend"
+```
 
 ## Cleaning Up
 ```bash
