@@ -44,4 +44,11 @@ It provides persistence for backend operations.
 
   to execute a single slice (e.g., frontend, backend, docker) without touching the rest.
 
+## Modules Used
+- project_setup: `apt` (update cache, install base packages).
+- app_code: `file`, `git`.
+- docker: `apt`, `ansible.builtin.shell `(GPG key pipeline), `apt_repository`, `service`, `user`,`community.docker.docker_network`, `community.docker.docker_volume`.
+- frontend/backend: `community.docker.docker_image` (build), `community.docker.docker_container` (run).
+- database: `community.docker.docker_container` (with volume + healthcheck).
+
 
