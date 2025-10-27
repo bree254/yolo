@@ -1,0 +1,28 @@
+root
+├── Vagrantfile
+├── playbook.yml
+├── inventory.yml
+├── group_vars/
+│   └── all.yml
+├── roles/
+│   ├── project_setup/
+│   │   └── tasks/main.yml
+│   ├── docker/
+│   │   ├── defaults/main.yml
+│   │   └── tasks/main.yml
+│   ├── app_code/
+│   │   ├── defaults/main.yml
+│   │   └── tasks/main.yml
+│   ├── frontend/
+│   │   ├── defaults/main.yml
+│   │   └── tasks/main.yml
+│   ├── backend/
+│   │   ├── defaults/main.yml
+│   │   └── tasks/main.yml
+│   └── database/
+│       ├── defaults/main.yml
+│       └── tasks/main.yml
+├── screenshots/
+│   └── ...
+├── README.md
+└── explanation.md
