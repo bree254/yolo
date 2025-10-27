@@ -74,6 +74,7 @@ Database Tag
 - `group_vars/all.yml` – Shared variables (paths, container names, ports)
 - `roles/` – Individual roles for setup, Docker, code checkout, and services
 - `screenshots/` – Reference images used in this README
+- [`Structure`](Structure) – Directory tree of the repository
 
 ## Troubleshooting
 - If provisioning fails or you change code, rerun:
