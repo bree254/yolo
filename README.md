@@ -1,4 +1,71 @@
-# YOLO E-commerce | Stage 1 Infrastructure
+# YOLO Platform
+
+1. **Docker Compose microservice stack** – local-first workflow for building/publishing the frontend, backend, and MongoDB images.
+2. **Stage 1 infrastructure** – a reproducible Vagrant VM that provisions the same stack with Ansible roles and tags.
+
+---
+
+## Docker Compose Microservice Stack
+
+### Overview
+The containerized YOLO dashboard runs as three services managed by `docker-compose.yaml`:
+- `yolo-frontend`: React SPA compiled to static assets and served by NGINX
+- `yolo-backend`: Express API that persists products to MongoDB
+- `yolo-mongo`: MongoDB with a named volume for data durability
+
+### Requirements
+- Docker Engine 24+ with the Compose plugin
+- Docker Hub account for `docker compose push` (images reference `bree254/*`)
+
+### Getting Started
+1. Clone the repo and stay in the project root.
+2. Build and launch the stack:
+   ```bash
+   docker compose up --build
+   ```
+3. Verify the services:
+   ```bash
+   docker compose ps
+   docker compose logs -f yolo-backend
+   ```
+   ![Docker compose ps image](screenshots/docker-compose-ps.png)
+   ![Docker compose logs image](screenshots/docker-compose-logs.png)
+4. Inspect image sizes:
+   ```bash
+   docker images
+   docker images bree254/yolo-frontend
+   docker images bree254/yolo-backend
+   docker images mongo:3.0
+   ```
+   ![Docker image sizes](screenshots/docker-images.png)
+   ![Frontend image size](screenshots/frontend-image.png)
+   ![Backend image size](screenshots/backend-image.png)
+   ![Mongo image size](screenshots/mongo-image.png)
+5. Size target: combined images (frontend 50.4 MB, backend 78.9 MB, Mongo 232 MB) total 362 MB, comfortably below the 400 MB rubric threshold.
+6. Browse http://localhost:3000 to add products. Backend runs on http://localhost:5000 and writes to the `mongo-data` volume.
+   ![Yolo website](screenshots/yolo-website.png)
+   ![Yolo website with products](screenshots/yolo-image-with-products.png)
+7. Validate CRUD + persistence:
+   - Add a product through the UI.
+   - Bring the stack down and back up to confirm data remains:
+     ```bash
+     docker compose down
+     docker compose up -d --pull always
+     ```
+
+### Publishing Images
+```bash
+docker compose build
+docker login
+docker compose push
+```
+![Docker hub repository](screenshots/dockerhub-repo.png)
+![Docker Hub – backend tags](screenshots/dockerhub-frontend.png)
+![Docker Hub – frontend tags](screenshots/dockerhub-backend.png)
+
+---
+
+## Stage 1 Infrastructure (Vagrant + Ansible)
 
 ## Project Overview
 This repository contains the Stage 1 deliverable for the YOLO e-commerce platform. The `vagrant up` command boots an `ubuntu/jammy64` virtual machine, installs Docker, clones the web application, builds the frontend and backend images, and deploys the three containerized services (frontend, backend API, MongoDB) with persistence.
