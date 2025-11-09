@@ -148,10 +148,9 @@ This section explains how the `manifests/` directory maps to the rubric objectiv
 
 ### 2. Exposure Method
 - **Ingress flow:** NodePort services feed a GCE HTTP(S) ingress (`ingress.yaml`). The rule sends `/api/*` to `backend-service:5000` and everything else to `frontend-service:80`. A `BackendConfig` (`cloud.google.com/backend-config`) overrides the default health check so GCE probes `/api/products` every 30 s. That stopped the “UNHEALTHY” loops I saw earlier because the controller now waits for Mongo + backend to finish booting before advertising the route.
-- **Fallback notes:** While debugging the ingress controller I temporarily exposed both services via LoadBalancer and rebuilt the React bundle with `REACT_APP_API_BASE_URL` pointing at the backend IP. I left those instructions in the README/explanation so TMs can understand the recovery path if ingress ever regresses.
 
 ### 3. Persistent Storage
-`mongo-data` is defined via the StatefulSet `volumeClaimTemplates` (5 Gi, `ReadWriteOnce`, `standard`). After recreating the Mongo pod I verified `/api/products` still returned the catalog, proving the PVC kept the BSON files. This meets the rubric requirement that deleting the DB pod should not wipe the cart.
+`mongo-data` is defined via the StatefulSet `volumeClaimTemplates` (5 Gi, `ReadWriteOnce`, `standard`). After recreating the Mongo pod I verified `/api/products` still returned the catalog, proving the PVC kept the BSON files. This means that deleting the DB pod should not wipe the cart.
 
 ### 4. Git Workflow
 I stayed on `master` but committed each stage separately: Mongo manifest, backend, frontend, backend-config, ingress, screenshots, and the ProductControl.js fix. Images (`bree254/yolo-frontend:v1.0.0`, `bree254/yolo-backend:v1.0.0`) share the same tags across Compose and GKE so manifests and Docker Hub never drift. Every `kubectl apply/get` command in the README has a matching screenshot under `screenshots/`.
@@ -174,6 +173,7 @@ I stayed on `master` but committed each stage separately: Mongo manifest, backen
   ![GKE site](screenshots/k8s-website.png)
 
   ![Products persisted](screenshots/k8s-website-data.png)
+
 - **Live demo:** `http://34.120.218.52`
 
 ### 6. Good Practices
