@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-frontend-deployment
+  labels:
+    app: yolo-frontend
+    tier: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: yolo-frontend
+      tier: web
+  template:
+    metadata:
+      labels:
+        app: yolo-frontend
+        tier: web
+    spec:
+      containers:
+      - name: yolo-frontend
+        image: docker.io/bree254/yolo-frontend:v1.0.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: http
+          containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: yolo-frontend
+    tier: web
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
