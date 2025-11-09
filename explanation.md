@@ -167,7 +167,7 @@ I stayed on `master` but committed each stage separately: Mongo manifest, backen
   kubectl get ingress yolo-ingress
   curl http://34.120.218.52/api/products
   ```
-  Screenshots (`k8s-website.png`, `k8s-website-data.png`) show adding a product through the public site and refreshing to confirm persistence.
+  Screenshots (`curl-api-products.png`, `k8s-website.png`, `k8s-website-data.png`) show the API returning data and the UI persisting items through refreshes.
 - **Live demo:** `http://34.120.218.52`
 
 ### 6. Good Practices

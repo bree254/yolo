@@ -263,6 +263,7 @@ The StatefulSet and PVC guarantees deleting the Mongo pod doesn’t drop the cat
    curl http://34.120.218.52/api/products
    open http://34.120.218.52
    ```
+   ![curl api products](screenshots/curl-api-products.png)
    ![GKE site](screenshots/k8s-website.png)
    ![Products persisted](screenshots/k8s-website-data.png)
 
