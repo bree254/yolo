@@ -246,6 +246,7 @@ The StatefulSet and PVC guarantees deleting the Mongo pod doesn’t drop the cat
       kubectl get ingress yolo-ingress
       ```
       ![Apply ingress](screenshots/apply-ingress.png)
+      ![Ingress Pods](screenshots/get-ingress-pod.png)
       ![Ingress resources](screenshots/k8s-ingress.png)
 
 4. **Expose the app to the Internet**
