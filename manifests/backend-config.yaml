@@ -1,0 +1,10 @@
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: backend-api-config
+spec:
+  healthCheck:
+    checkIntervalSec: 30
+    timeoutSec: 5
+    port: 5000
+    requestPath: /api/products
