@@ -33,7 +33,7 @@ kind: Service
 metadata:
   name: frontend-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: yolo-frontend
     tier: web
