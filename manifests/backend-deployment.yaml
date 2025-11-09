@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-backend-deployment
+  labels: 
+    app: yolo-backend
+    tier: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: yolo-backend
+      tier: api
+  template:
+    metadata:
+      labels:
+        app: yolo-backend
+        tier: api
+    spec:
+      containers:
+      - name: yolo-backend
+        image: docker.io/bree254/yolo-backend:v1.0.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: http
+          containerPort: 5000
+        env:
+        - name: PORT
+          value: "5000"
+        - name: MONGODB_URI
+          value: mongodb://mongo-service:27017/yolomy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: yolo-backend
+    tier: api
+  ports:
+  - name: http
+    port: 5000
+    targetPort: 5000
