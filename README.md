@@ -214,6 +214,7 @@ The StatefulSet and PVC guarantees deleting the Mongo pod doesn’t drop the cat
       kubectl get pods -l app=mongo
       ```
       ![Apply Mongo manifest](screenshots/apply-mongo-statefulset.png)
+
       ![Get Mongo pod](screenshots/get-mongo-pod.png)
 
    2. Backend Deployment + Service (NodePort) + BackendConfig
@@ -225,7 +226,9 @@ The StatefulSet and PVC guarantees deleting the Mongo pod doesn’t drop the cat
       kubectl get svc backend-service
       ```
       ![Apply backend manifest](screenshots/apply-backend-deployment.png)
+
       ![Backend pods](screenshots/get-backend-pod.png)
+
       ![Backend service](screenshots/get-backend-service.png)
 
    3. Frontend Deployment + Service (NodePort)
@@ -236,7 +239,9 @@ The StatefulSet and PVC guarantees deleting the Mongo pod doesn’t drop the cat
       kubectl get svc frontend-service
       ```
       ![Apply frontend manifest](screenshots/apply-frontend-deployment.png)
+
       ![Frontend pods](screenshots/get-frontend-pod.png)
+
       ![Frontend service](screenshots/get-frontend-service.png)
 
    4. Ingress (single public IP)
@@ -246,7 +251,9 @@ The StatefulSet and PVC guarantees deleting the Mongo pod doesn’t drop the cat
       kubectl get ingress yolo-ingress
       ```
       ![Apply ingress](screenshots/apply-ingress.png)
+
       ![Ingress Pods](screenshots/get-ingress-pod.png)
+
       ![Ingress resources](screenshots/k8s-ingress.png)
 
 4. **Expose the app to the Internet**
@@ -255,6 +262,7 @@ The StatefulSet and PVC guarantees deleting the Mongo pod doesn’t drop the cat
    kubectl get ingress yolo-ingress
    ```
    ![Ingress with IP](screenshots/yolo-ingress.png)
+
    ![GCP services view](screenshots/k8s-services-gcp.png)
 
 5. **Smoke test the stack**
@@ -264,7 +272,9 @@ The StatefulSet and PVC guarantees deleting the Mongo pod doesn’t drop the cat
    open http://34.120.218.52
    ```
    ![curl api products](screenshots/curl-api-products.png)
+
    ![GKE site](screenshots/k8s-website.png)
+   
    ![Products persisted](screenshots/k8s-website-data.png)
 
 6. **Record the live URL**
