@@ -2,6 +2,7 @@
 
 1. **Part 1 – Docker Compose microservice stack** (local build/publish workflow).
 2. **Part 2 – Stage 1 infrastructure with Vagrant + Ansible** (remote provisioning workflow).
+3. **Part 3 – GKE Deployment**
 
 ## Part 1 – Docker Compose Microservice Stack
 
@@ -137,3 +138,40 @@ It provides persistence for backend operations.
 - frontend/backend: `community.docker.docker_image` (build), `community.docker.docker_container` (run).
 - database: `community.docker.docker_container` (with volume + healthcheck).
 
+## Part 3 – GKE Deployment
+This section explains how the `manifests/` directory maps to the rubric objectives and how I validated the live cluster (`http://34.120.218.52`).
+
+### 1. Kubernetes Objects
+- **StatefulSet (MongoDB):** Mongo runs as a StatefulSet with a headless service so the pod keeps a stable DNS name (`yolo-mongo-0.mongo-service`) and can mount a persistent volume. I bumped the PVC request to 5 Gi on the `standard` class after discovering Mongo 3.0 preallocates ~3 GB for journals. The new PVC satisfies the requirement and lets me delete/recreate the pod without losing catalog data.
+- **Deployments (Frontend/Backend):** Both app tiers are stateless, so I used Deployments with two replicas each plus CPU/memory limits (`500m`, `128 Mi`). Labels (`app`, `tier`) stay consistent across Deployments, Services, and ingress rules so I can filter (`kubectl get pods -l tier=api`) and so routing objects only touch the pods intended for them.
+- **Services & Routing:** Each Deployment has a Service. For the ingress path I run them as `NodePort` so the GCE load balancer can target them. Before the ingress stabilized I kept notes on the LoadBalancer fallback, but the final cluster uses the single-IP ingress described below.
+
+### 2. Exposure Method
+- **Ingress flow:** NodePort services feed a GCE HTTP(S) ingress (`ingress.yaml`). The rule sends `/api/*` to `backend-service:5000` and everything else to `frontend-service:80`. A `BackendConfig` (`cloud.google.com/backend-config`) overrides the default health check so GCE probes `/api/products` every 30 s. That stopped the “UNHEALTHY” loops I saw earlier because the controller now waits for Mongo + backend to finish booting before advertising the route.
+- **Fallback notes:** While debugging the ingress controller I temporarily exposed both services via LoadBalancer and rebuilt the React bundle with `REACT_APP_API_BASE_URL` pointing at the backend IP. I left those instructions in the README/explanation so TMs can understand the recovery path if ingress ever regresses.
+
+### 3. Persistent Storage
+`mongo-data` is defined via the StatefulSet `volumeClaimTemplates` (5 Gi, `ReadWriteOnce`, `standard`). After recreating the Mongo pod I verified `/api/products` still returned the catalog, proving the PVC kept the BSON files. This meets the rubric requirement that deleting the DB pod should not wipe the cart.
+
+### 4. Git Workflow
+I stayed on `master` but committed each stage separately: Mongo manifest, backend, frontend, backend-config, ingress, screenshots, and the ProductControl.js fix. Images (`bree254/yolo-frontend:v1.0.0`, `bree254/yolo-backend:v1.0.0`) share the same tags across Compose and GKE so manifests and Docker Hub never drift. Every `kubectl apply/get` command in the README has a matching screenshot under `screenshots/`.
+
+### 5. Debugging & Live URL
+- **Fixes logged:**  
+  - Increased the Mongo PVC from 1 Gi → 5 Gi after the pod crashed with “Insufficient free space for journal files.”  
+  - Replaced hard-coded `http://localhost:5000` calls in `ProductControl.js` with a shared axios client that respects `REACT_APP_API_BASE_URL` or falls back to `window.location.origin`.  
+  - Added `backend-config.yaml` so the ingress stops marking the backend as unhealthy.  
+  - Recreated the cluster with the HTTP load-balancing add-on enabled once the GLBC controller stopped responding.
+- **Validation:**  
+  ```bash
+  kubectl get ingress yolo-ingress
+  curl http://34.120.218.52/api/products
+  ```
+  Screenshots (`k8s-website.png`, `k8s-website-data.png`) show adding a product through the public site and refreshing to confirm persistence.
+- **Live demo:** `http://34.120.218.52`
+
+### 6. Good Practices
+- Reused semantic Docker tags (`v1.0.0`) to keep IP2/IP3 deliverables aligned.
+- Health checks (BackendConfig) and resource limits guard the cluster from unhealthy pods and noisy neighbors.
+- Consistent labels (`app`, `tier`) and file naming make the manifests easy to scan and reason about.
+- README and explanation cross-link to the exact screenshots/commands so reviewers can replay every step without guessing.
